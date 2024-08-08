@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
-import 'package:movie_stream/pages/home/components/category_label.dart';
-import 'package:movie_stream/pages/home/components/search_bar.dart';
+import 'package:movie_stream/ui/pages/home/components/category_label.dart';
+import 'package:movie_stream/ui/pages/home/components/search_bar.dart';
 import 'package:movie_stream/models/slider.dart';
-import 'package:movie_stream/widgets/thumbnail_image.dart';
+import 'package:movie_stream/ui/widgets/thumbnail_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

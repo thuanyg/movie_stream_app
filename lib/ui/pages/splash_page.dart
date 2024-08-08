@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
-import 'package:movie_stream/pages/login/login_page.dart';
-import 'package:movie_stream/pages/onboarding_page.dart';
+import 'package:movie_stream/ui/pages/login/login_page.dart';
+import 'package:movie_stream/ui/pages/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {

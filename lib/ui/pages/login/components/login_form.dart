@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
-import 'package:movie_stream/pages/home/home_page.dart';
-import 'package:movie_stream/widgets/text_field.dart';
+import 'package:movie_stream/ui/pages/home/home_page.dart';
+import 'package:movie_stream/ui/widgets/text_field.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController usernameController;

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/models/slider.dart';
-import 'package:movie_stream/pages/detail/detail_page.dart';
-import 'package:movie_stream/pages/home/personal_screen.dart';
-import 'package:movie_stream/widgets/thumbnail_image.dart';
+import 'package:movie_stream/ui/pages/detail/detail_page.dart';
+import 'package:movie_stream/ui/pages/home/personal_screen.dart';
+import 'package:movie_stream/ui/widgets/thumbnail_image.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie_stream/configs/app_colors.dart';
-import 'package:movie_stream/pages/splash_page.dart';
+import 'package:movie_stream/ui/pages/splash_page.dart';
 import 'package:movie_stream/routes.dart';
 
 void main() {

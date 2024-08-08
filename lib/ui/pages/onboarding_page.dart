@@ -4,7 +4,7 @@ import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/configs/constaints.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
-import 'package:movie_stream/pages/login/login_page.dart';
+import 'package:movie_stream/ui/pages/login/login_page.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});

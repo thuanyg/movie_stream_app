@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
-import 'package:movie_stream/pages/home/favorite_screen.dart';
-import 'package:movie_stream/pages/home/home_screen.dart';
-import 'package:movie_stream/pages/home/personal_screen.dart';
+import 'package:movie_stream/ui/pages/home/favorite_screen.dart';
+import 'package:movie_stream/ui/pages/home/home_screen.dart';
+import 'package:movie_stream/ui/pages/home/personal_screen.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = '/HomePage';
@@ -34,13 +34,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
+          data: const NavigationBarThemeData(
             backgroundColor: AppColors.bottomNavColor,
             height: 63,
             elevation: 2.0,
-            indicatorColor: AppColors.primaryColor,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            labelTextStyle: WidgetStateProperty.all(AppStyles.heading4),
+            indicatorColor: Colors.transparent,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+            // labelTextStyle: WidgetStateProperty.all(AppStyles.heading4),
           ),
           child: NavigationBar(
             selectedIndex: currentPageIndex,
@@ -59,9 +59,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 label: "Home",
                 selectedIcon: Icon(
-                  size: 20,
+                  size: 24,
                   Icons.home,
-                  color: Colors.white,
+                  color: Color(0xff54A8E5),
                 ),
               ),
               NavigationDestination(
@@ -72,9 +72,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 label: "Favourite",
                 selectedIcon: Icon(
-                  size: 20,
+                  size: 24,
                   Icons.favorite,
-                  color: Colors.white,
+                  color: Color(0xff54A8E5),
                 ),
               ),
               NavigationDestination(
@@ -85,9 +85,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 label: "Personal",
                 selectedIcon: Icon(
-                  size: 20,
+                  size: 24,
                   Icons.person_2,
-                  color: Colors.white,
+                  color: Color(0xff54A8E5),
                 ),
               ),
             ],
