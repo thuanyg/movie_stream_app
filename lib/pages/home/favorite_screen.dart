@@ -13,7 +13,7 @@ class FavoriteScreen extends StatefulWidget {
   State<FavoriteScreen> createState() => _FavoriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAliveClientMixin{
   final List<SliderModel> thumbImages = [
     SliderModel(
         "https://phim.nguonc.com/public/images/Post/9/co-chau.jpg", "slink"),
@@ -84,4 +84,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   void goToDetailPage() {
     Navigator.pushNamed(context, DetailPage.routeName);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

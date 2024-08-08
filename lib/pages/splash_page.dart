@@ -22,21 +22,23 @@ class _SplashPageState extends State<SplashPage> {
     final Size size = MediaQuery.of(context).size;
     return AnimatedSplashScreen.withScreenFunction(
       duration: 2000,
-      splash: Container(
-        height: size.height,
-        margin: const EdgeInsets.all(10),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Lottie.asset("assets/animation/splash_animation.json",
-                  height: 48, width: 48, fit: BoxFit.fill),
-              Text(
-                "Welcome to WatchEz",
-                style: AppStyles.heading2.copyWith(fontWeight: FontWeight.bold),
-              )
-            ]),
-      ),
+      splash: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              height: 50,
+              width: 50,
+              child: Lottie.asset(
+                "assets/animation/splash_animation.json",
+                fit: BoxFit.contain,
+              ),
+            ),
+            Text(
+              "Welcome to WatchEz",
+              style: AppStyles.heading2.copyWith(fontWeight: FontWeight.bold),
+            )
+          ]),
       screenFunction: () async {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         final bool isFirstRun = prefs.getBool('firstRun') ?? true;

@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin{
   int _current = 0;
   int currentTabSelectedIndex = 0;
   final TextEditingController searchController = TextEditingController();
