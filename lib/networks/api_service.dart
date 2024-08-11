@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String BASE_URL = "https://phim.nguonc.com/api";
+  final String BASE_URL = "https://watchez.onrender.com/watchez";
 
   Future<T> get<T>(
       String endpoint, T Function(Map<String, dynamic>) fromJson) async {

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_strings.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/helpers/image_helper.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
 import 'package:movie_stream/ui/pages/login/components/login_form.dart';
 import 'package:movie_stream/ui/widgets/text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
   static const String routeName = '/LoginPage';
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -19,17 +23,28 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 50, 10, 15),
+        padding: const EdgeInsets.fromLTRB(10, 50, 10, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(bottom: 150),
-                child: Text("Log in to WatchEz", style: AppStyles.heading2)),
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(top: 24),
+              child: Text(
+                "Log in to WatchEz",
+                style: AppStyles.heading1.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: ImageHelper.loadAssetImage("assets/images/ic_launcher.png",
+                  height: 100, width: 100),
+            ),
 
             LoginForm(
                 usernameController: usernameController,
@@ -80,9 +95,9 @@ class _LoginPageState extends State<LoginPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    'http://pngimg.com/uploads/google/google_PNG19635.png', // Path to Google icon
-                    height: 24.0,
+                  ImageHelper.loadAssetImage(
+                    'assets/images/ic_google.png',
+                    height: 20.0,
                   ),
                   SizedBox(width: 8.0),
                   const Text(
@@ -110,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.facebook,
-                      color: Colors.blueAccent), // Facebook icon
+                      color: Colors.blueAccent, size: 22,), // Facebook icon
                   SizedBox(width: 8.0),
                   Text(
                     'Continue with Facebook',

@@ -18,3 +18,5 @@ const List<Onboarding> onboardingPages = [
     imageAssetPath: 'assets/onboarding/onboarding_img_3.png',
   ),
 ];
+
+const String APP_BASE_URL = "https://watchez.onrender.com/watchez";

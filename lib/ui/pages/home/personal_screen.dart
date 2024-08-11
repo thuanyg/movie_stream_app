@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/dto/response/api_response.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
 import 'package:movie_stream/models/movies_response.dart';
-import 'package:movie_stream/networks/api_service.dart';
-import 'package:movie_stream/networks/services/movie_service.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -13,28 +12,28 @@ class PersonalScreen extends StatefulWidget {
   State<PersonalScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<PersonalScreen>
-    with AutomaticKeepAliveClientMixin {
+class _HomeScreenState extends State<PersonalScreen> {
   late Future<MoviesResponse> futureMovies;
+  late Future<ApiResponse<List<Object>>> users;
 
   @override
   void initState() {
     super.initState();
-    futureMovies = MovieService(apiService: ApiService()).fetchListMovies(1);
-    // In dữ liệu sau khi tải về
-    futureMovies.then((response) {
-      print('Movies fetched successfully:');
-
-      // Kiểm tra nếu response.movies không null và không rỗng
-      if (response.items!.isNotEmpty) {
-        final movie = response.items?[0]; // Truy cập bộ phim đầu tiên
-        print('Movie ID: ${movie?.name}, Title: ${movie?.slug}');
-      } else {
-        print('No movies found in the response');
-      }
-    }).catchError((error) {
-      print('Failed to fetch movies: $error');
-    });
+    // futureMovies = MovieService(apiService: ApiService()).fetchListMovies(1);
+    // // In dữ liệu sau khi tải về
+    // futureMovies.then((response) {
+    //   print('Movies fetched successfully:');
+    //
+    //   // Kiểm tra nếu response.movies không null và không rỗng
+    //   if (response.items!.isNotEmpty) {
+    //     final movie = response.items?[0]; // Truy cập bộ phim đầu tiên
+    //     print('Movie ID: ${movie?.name}, Title: ${movie?.slug}');
+    //   } else {
+    //     print('No movies found in the response');
+    //   }
+    // }).catchError((error) {
+    //   print('Failed to fetch movies: $error');
+    // });
   }
 
   @override

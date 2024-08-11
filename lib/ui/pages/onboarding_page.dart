@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
-import 'package:movie_stream/configs/constaints.dart';
+import 'package:movie_stream/configs/constants.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
 import 'package:movie_stream/ui/pages/login/login_page.dart';
 
