@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/dto/request/auth_request.dart';
 import 'package:movie_stream/modules/validator.dart';
+import 'package:movie_stream/providers/auth/login_provider.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
 import 'package:movie_stream/ui/pages/signup_page.dart';
 import 'package:movie_stream/ui/widgets/button_submit.dart';
 import 'package:movie_stream/ui/widgets/text_field.dart';
 import 'package:movie_stream/utils/app_utils.dart';
+import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   final TextEditingController usernameController;
   final TextEditingController passController;
 
-  LoginForm({
-    Key? key,
+  const LoginForm({
+    super.key,
     required this.usernameController,
     required this.passController,
-  }) : super(key: key);
+  });
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -28,6 +31,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final String usernameSignUp =
           ModalRoute.of(context)?.settings.arguments as String? ?? "";
@@ -39,8 +43,6 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
     return Form(
       key: _formKey,
       child: Column(children: [
@@ -79,7 +81,7 @@ class _LoginFormState extends State<LoginForm> {
               child: Text(
                 "Sign up",
                 style:
-                AppStyles.heading4.copyWith(color: AppColors.primaryColor),
+                    AppStyles.heading4.copyWith(color: AppColors.primaryColor),
               ),
             ),
             Expanded(
@@ -98,37 +100,34 @@ class _LoginFormState extends State<LoginForm> {
         ),
 
         SubmitButton(
-            formKey: _formKey,
-            textButton: "Login",
-            onClick: () async {
-              await LoginAction(context);
-            }),
+          formKey: _formKey,
+          textButton: "Login",
+          onClick: loginAction,
+        ),
       ]),
     );
   }
 
-  Future<void> LoginAction(BuildContext context) async {
+  Future<void> loginAction() async {
     if (_formKey.currentState?.validate() ?? false) {
       String username = widget.usernameController.text.trim();
       String password = widget.passController.text.trim();
 
-      AppUtil.showLoadingDialog(
-          context, "Please hold on, we are logging you in...");
+      AuthRequest authRequest = AuthRequest(username, username, password);
+
+      final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+
+      AppUtil.showLoadingDialog(context, "We are logging you in...");
 
       try {
-        // Giả lập quá trình đăng nhập
-        await Future.delayed(Duration(seconds: 2));
-
-        // TODO: Thực hiện quá trình đăng nhập ở đây
-
-        Navigator.of(context).pop(); // Đóng hộp thoại tải
-        Navigator.pushReplacementNamed(context, HomePage.routeName);
-      } catch (e) {
-        Navigator.of(context).pop(); // Đóng hộp thoại tải
-        // Xử lý lỗi nếu có
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred: $e')),
-        );
+        bool isLoginSuccess =
+            await loginProvider.loginAuthenticate(context, authRequest);
+        AppUtil.hideLoadingDialog(context);
+        if (isLoginSuccess && context.mounted) {
+          Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+        }
+      } finally {
+        AppUtil.hideLoadingDialog(context);
       }
     }
   }

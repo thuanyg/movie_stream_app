@@ -25,7 +25,7 @@ enum CustomStatusCode {
   NO_USERS_FOUND(1003, "No users found"),
   USER_CREATION_FAILED(1004, "User creation failed"),
   USER_UPDATE_FAILED(1005, "User update failed"),
-  INVALID_LOGIN(1006, "Email or username not exist."),
+  INVALID_LOGIN(1006, "Username or password invalid."),
   MOVIE_SAVE_EXISTED(1007, "Favorite movie already existed by this user."),
   MOVIE_SAVE_NOT_EXISTED(1008, "Favorite movie not exist");
 

@@ -4,12 +4,16 @@ import 'package:movie_stream/configs/constants.dart';
 import 'package:movie_stream/dto/request/user_creation_request.dart';
 import 'package:movie_stream/dto/response/api_response.dart';
 import 'package:movie_stream/dto/response/user_creation_response.dart';
+import 'package:movie_stream/dto/response/user_info_response.dart';
 import 'package:movie_stream/models/user.dart';
 import 'package:movie_stream/networks/exception/http_exception.dart';
 import 'package:movie_stream/repository/repository.dart';
+import 'package:movie_stream/utils/app_utils.dart';
 
 class UserRepository
     extends Repository<User, UserCreationRequest, UserCreationRequest> {
+  static const url = '$APP_BASE_URL/users';
+
   @override
   Future<ApiResponse<dynamic>> delete(String id) {
     // TODO: implement delete
@@ -25,7 +29,6 @@ class UserRepository
   @override
   Future<ApiResponse<UserCreationResponse>> post(
       UserCreationRequest userRequest) async {
-    const url = '$APP_BASE_URL/users';
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -40,13 +43,16 @@ class UserRepository
           return ApiResponse<UserCreationResponse>.fromJson(
               data, (json) => UserCreationResponse.fromJson(json));
         case 400:
-          final errorMessage = data['message'] ?? 'Bad Request. Please check your input.';
+          final errorMessage =
+              data['message'] ?? 'Bad Request. Please check your input.';
           throw BadRequestException(errorMessage);
         case 500:
-          final errorMessage = data['message'] ?? 'Internal Server Error. Please try again later.';
+          final errorMessage = data['message'] ??
+              'Internal Server Error. Please try again later.';
           throw InternalServerException(errorMessage);
         default:
-          final errorMessage = data['message'] ?? 'Unknown error occurred. Please try again.';
+          final errorMessage =
+              data['message'] ?? 'Unknown error occurred. Please try again.';
           throw Exception(errorMessage);
       }
     } catch (e) {
@@ -58,5 +64,40 @@ class UserRepository
   Future<ApiResponse<dynamic>> update(String id, UserCreationRequest t) {
     // TODO: implement update
     throw UnimplementedError();
+  }
+
+  @override
+  Future<ApiResponse<UserInfo>> getById(String id) async {
+    try {
+      String? token = await AppUtil.readSecureStorage(USER_TOKEN_KEY);
+      final response = await http.get(
+        Uri.parse('$url/$id'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      final data = json.decode(response.body);
+
+      switch (response.statusCode) {
+        case 200:
+          return ApiResponse<UserInfo>.fromJson(
+              data, (json) => UserInfo.fromJson(json));
+        case 400:
+          final errorMessage =
+              data['message'] ?? 'Bad Request. Please check your input.';
+          throw BadRequestException(errorMessage);
+        case 500:
+          final errorMessage = data['message'] ??
+              'Internal Server Error. Please try again later.';
+          throw InternalServerException(errorMessage);
+        default:
+          final errorMessage =
+              data['message'] ?? 'Unknown error occurred. Please try again.';
+          throw Exception(errorMessage);
+      }
+    } on Exception catch (e) {
+      throw Exception(e.toString());
+    }
   }
 }

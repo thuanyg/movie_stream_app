@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageHelper {
@@ -24,16 +25,20 @@ class ImageHelper {
       double? height,
       BorderRadius? radius,
       Color? tintColor,
-      Alignment? alignment,
+      Alignment alignment = Alignment.center,
       BoxFit? fit}) {
     return ClipRRect(
-      borderRadius: radius ?? BorderRadius.zero,
-      child: Image.network(imageLink,
+        borderRadius: radius ?? BorderRadius.zero,
+        child: CachedNetworkImage(
+          imageUrl: imageLink,
+          placeholder: (context, url) =>
+              const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) =>
+              const Center(child: Icon(Icons.error, color: Colors.red)),
           width: width,
           height: height,
+          alignment: alignment,
           fit: fit,
-          color: tintColor,
-          alignment: alignment ?? Alignment.center),
-    );
+        ));
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
-import 'package:movie_stream/helpers/image_helper.dart';
-import 'package:movie_stream/modules/signup/signup_controller.dart';
 import 'package:movie_stream/modules/validator.dart';
-import 'package:movie_stream/repository/user_repository.dart';
+import 'package:movie_stream/helpers/image_helper.dart';
+import 'package:movie_stream/providers/auth/signup_provider.dart';
 import 'package:movie_stream/ui/pages/login/login_page.dart';
 import 'package:movie_stream/ui/widgets/button_submit.dart';
 import 'package:movie_stream/ui/widgets/text_field.dart';
 import 'package:movie_stream/utils/app_utils.dart';
+import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -21,19 +21,12 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   String gender = "Male";
-  late SignUpController _signUpController;
-  final signup_formKey = GlobalKey<FormState>();
+  final signUpFormKey = GlobalKey<FormState>();
 
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _rePasswordController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _signUpController = SignUpController(context, UserRepository());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +36,7 @@ class _SignupPageState extends State<SignupPage> {
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Form(
-                key: signup_formKey,
+                key: signUpFormKey,
                 child: Column(
                   children: [
                     Container(
@@ -136,30 +129,7 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 16),
                     SubmitButton(
                       textButton: "Sign Up",
-                      onClick: () async {
-                        if (signup_formKey.currentState?.validate() ?? false) {
-                          String username = _usernameController.text.trim();
-                          String email = _emailController.text.trim();
-                          String password = _passwordController.text.trim();
-
-                          // Hiển thị loading dialog
-                          AppUtil.showLoadingDialog(
-                              context, "Creating your account...");
-
-                          _signUpController
-                              .signUp(username, email, password)
-                              .then((success) {
-                            AppUtil.hideLoadingDialog(context);
-                            if (success) {
-                              Navigator.of(context).pushReplacementNamed(
-                                  LoginPage.routeName,
-                                  arguments: username);
-                            } else {
-                              // Hiển thị lỗi hoặc xử lý khác
-                            }
-                          });
-                        }
-                      },
+                      onClick: signUpAction,
                     )
 
                     // Row(
@@ -195,5 +165,27 @@ class _SignupPageState extends State<SignupPage> {
         ),
       ),
     );
+  }
+
+  Future<void> signUpAction() async {
+    if (signUpFormKey.currentState?.validate() ?? false) {
+      String username = _usernameController.text.trim();
+      String email = _emailController.text.trim();
+      String password = _passwordController.text.trim();
+
+      // Hiển thị loading dialog
+      AppUtil.showLoadingDialog(context, "Creating your account...");
+      final userProvider = Provider.of<SignupProvider>(context, listen: false);
+
+      userProvider.signUp(context, username, email, password).then((success) {
+        AppUtil.hideLoadingDialog(context);
+        if (success) {
+          Navigator.of(context)
+              .pushReplacementNamed(LoginPage.routeName, arguments: username);
+        } else {
+          // Hiển thị lỗi hoặc xử lý khác
+        }
+      });
+    }
   }
 }

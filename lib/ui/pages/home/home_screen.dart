@@ -3,10 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
+import 'package:movie_stream/models/items_latest_movie.dart';
+import 'package:movie_stream/providers/movie/movie_provider.dart';
 import 'package:movie_stream/ui/pages/home/components/category_label.dart';
 import 'package:movie_stream/ui/pages/home/components/search_bar.dart';
 import 'package:movie_stream/models/slider.dart';
+import 'package:movie_stream/ui/widgets/progress_indicator.dart';
 import 'package:movie_stream/ui/widgets/thumbnail_image.dart';
+import 'package:movie_stream/utils/app_utils.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +20,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin{
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   int _current = 0;
   int currentTabSelectedIndex = 0;
   final TextEditingController searchController = TextEditingController();
@@ -51,6 +57,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     "Trung Quốc",
     "Việt Nam"
   ];
+
+  late Future<List<ItemsLatestMovie>?> _latestMoviesFuture;
+  late MovieProvider provider;
+
+  @override
+  void initState() {
+    super.initState();
+
+    provider = Provider.of<MovieProvider>(context, listen: false);
+
+    _latestMoviesFuture = provider.getListLatestMovie(1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,30 +131,65 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                         print("See allllllllllll");
                       },
                     ),
-                    SizedBox(
-                      height: size.height / 3.2,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        // Hỗ trợ việc xây dựng ListView bên trong Column
-                        itemCount: thumbImages.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            width: size.width * 0.3,
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(children: [
-                              ThumbnailImage(thumbImages[index].imageLink.toString()),
-                              const SizedBox(height: 8),
-                              Text(
-                                "Bùng Cháy Nào! Cô Gái Bóng Chuyền",
-                                style: AppStyles.heading4,
-                                textAlign: TextAlign.center,
-                              )
-                            ]),
-                          );
-                        },
-                      ),
-                    ),
+                    provider.isLoading
+                        ? const Center(child: CustomCircularProgressIndicator())
+                        : FutureBuilder<List<ItemsLatestMovie>?>(
+                            future: _latestMoviesFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CustomCircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return const Center(
+                                    child: Text('Đã xảy ra lỗi'));
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return const Center(
+                                    child: Text('Không có phim nào'));
+                              } else {
+                                final latestMovies = snapshot.data!;
+                                return SizedBox(
+                                  height: size.height / 3.2,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: latestMovies.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        width: size.width * 0.3,
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 8.0,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                AppUtil.showSnackBar(context,
+                                                    'Movies ID: ${latestMovies[index].sId}');
+                                              },
+                                              child: ThumbnailImage(
+                                                latestMovies[index].posterUrl ??
+                                                    '',
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              latestMovies[index].name ??
+                                                  'No name',
+                                              style: AppStyles.heading4,
+                                              textAlign: TextAlign.center,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+
                     // Odd films
                     Category(
                       categoryName: "Phim lẻ",
@@ -230,10 +283,12 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      margin: const EdgeInsets.only(bottom: 8.0, left: 28, right: 28),
+                      margin: const EdgeInsets.only(
+                          bottom: 8.0, left: 28, right: 28),
                       child: Text(
                         categories[currentTabSelectedIndex],
-                        style: AppStyles.heading3.copyWith(color: AppColors.textColor),
+                        style: AppStyles.heading3
+                            .copyWith(color: AppColors.textColor),
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,

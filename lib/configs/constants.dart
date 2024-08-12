@@ -20,3 +20,7 @@ const List<Onboarding> onboardingPages = [
 ];
 
 const String APP_BASE_URL = "https://watchez.onrender.com/watchez";
+const String MOVIE_API_URL = "https://phimapi.com";
+
+// DataStorage
+const String USER_TOKEN_KEY = "userToken";
