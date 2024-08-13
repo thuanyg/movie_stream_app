@@ -6,7 +6,7 @@ import 'package:movie_stream/dto/response/api_response.dart';
 import 'package:movie_stream/dto/response/verify_token_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_stream/networks/exception/http_exception.dart';
-import 'package:movie_stream/networks/status_code.dart';
+
 
 class VerifyRepository {
   Future<ApiResponse<VerifyTokenResponse>> verifyToken(String token) async {
@@ -20,6 +20,11 @@ class VerifyRepository {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(body),
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw TimeoutException('Connection timed out');
+        },
       );
       final data = json.decode(response.body);
       switch (response.statusCode) {

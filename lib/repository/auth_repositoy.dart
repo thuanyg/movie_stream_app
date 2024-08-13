@@ -32,7 +32,12 @@ class AuthRepository extends Repository<User, AuthRequest, Object> {
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(t.toJson()),
-      );
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw TimeoutException('Connection timed out');
+        },
+      );;
 
       final data = json.decode(response.body);
       switch (response.statusCode) {

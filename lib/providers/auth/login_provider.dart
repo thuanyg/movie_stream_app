@@ -5,9 +5,11 @@ import 'package:movie_stream/dto/response/api_response.dart';
 import 'package:movie_stream/dto/response/user_info_response.dart';
 import 'package:movie_stream/dto/response/verify_token_response.dart';
 import 'package:movie_stream/networks/status_code.dart';
+import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/repository/auth_repositoy.dart';
 import 'package:movie_stream/repository/verify_token_repository.dart';
 import 'package:movie_stream/utils/app_utils.dart';
+import 'package:provider/provider.dart';
 
 class LoginProvider with ChangeNotifier {
   UserInfo? _userInfo;
@@ -35,8 +37,17 @@ class LoginProvider with ChangeNotifier {
           response.data != null) {
         // Save JWT token to SecureStorage
         String? token = response.data?.token; // null-aware operator
-
         AppUtil.writeSecureStorage(USER_TOKEN_KEY, token);
+
+        // Fetch User information
+        final verifyTokenResponse = await handleValidToken();
+
+        if (verifyTokenResponse != null && verifyTokenResponse.valid) {
+          String? id = verifyTokenResponse.userid.toString();
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
+          await userProvider.fetchUserByID(id);
+        }
 
         return true;
       }

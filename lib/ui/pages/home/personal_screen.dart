@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/dto/response/user_info_response.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
-
+import 'package:movie_stream/providers/user/user_provider.dart';
+import 'package:movie_stream/ui/pages/login/login_page.dart';
+import 'package:movie_stream/utils/app_utils.dart';
+import 'package:provider/provider.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({super.key});
@@ -12,6 +16,15 @@ class PersonalScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<PersonalScreen> {
+  late UserProvider userProvider;
+  late UserInfo userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    userInfo = userProvider.getUser!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +113,7 @@ class _HomeScreenState extends State<PersonalScreen> {
                     ItemSetting(
                       iconAssetPath: "assets/images/ic_logout_setting.png",
                       settingName: "Logout",
-                      onTapItemSetting: () => {print("ss")},
+                      onTapItemSetting: logOutAction,
                     ),
                   ],
                 ),
@@ -128,8 +141,11 @@ class _HomeScreenState extends State<PersonalScreen> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey, width: .3)),
-            child: ImageHelper.loadAssetImage("assets/images/ic_launcher.png",
-                radius: BorderRadius.circular(12), width: 48, height: 48),
+            child: userInfo.avatarUrl != null
+                ? ImageHelper.loadNetworkImage(userInfo.avatarUrl.toString(),
+                    radius: BorderRadius.circular(12), width: 48, height: 48)
+                : ImageHelper.loadAssetImage("assets/images/ic_launcher.png",
+                    radius: BorderRadius.circular(12), width: 48, height: 48),
           ),
           const SizedBox(width: 10),
           Column(
@@ -137,14 +153,16 @@ class _HomeScreenState extends State<PersonalScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Hoàng Tiến Thuận",
+                userInfo.firstName == null && userInfo.lastName == null
+                    ? "Anonymous"
+                    : '${userInfo.firstName} ${userInfo.lastName}',
                 style: AppStyles.heading3.copyWith(
                   overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                "thuanht.nuce",
+                '@${userInfo.username}',
                 style:
                     AppStyles.heading4.copyWith(color: AppColors.textHintColor),
               ),
@@ -154,6 +172,22 @@ class _HomeScreenState extends State<PersonalScreen> {
         // Name
       ),
     );
+  }
+
+  logOutAction() async {
+    AppUtil.showLoadingDialog(context, "Logging out...");
+    try {
+      bool isLoggedOut = await userProvider.logOut();
+      if (isLoggedOut) {
+        await Future.delayed(const Duration(seconds: 2));
+        AppUtil.hideLoadingDialog(context);
+        Navigator.of(context).pushReplacementNamed(LoginPage.routeName);
+      }
+    } catch (e) {
+      print('Error during logout: $e');
+    } finally {
+      AppUtil.hideLoadingDialog(context);
+    }
   }
 }
 
@@ -170,10 +204,11 @@ class ItemSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 5.0),
-      child: GestureDetector(
-        onTap: onTapItemSetting,
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: onTapItemSetting,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
             ImageHelper.loadAssetImage(

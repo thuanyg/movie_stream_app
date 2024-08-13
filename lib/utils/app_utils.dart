@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/helpers/image_helper.dart';
 
 class AppUtil {
   static void showSnackBar(BuildContext context, String message) {
@@ -57,27 +58,56 @@ class AppUtil {
     required BuildContext context,
     required String title,
     required String message,
-    required VoidCallback onPressPositive,
-    required VoidCallback onPressNegative,
+    required VoidCallback onPressAction,
   }) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      // Ngăn người dùng đóng dialog bằng cách chạm ra ngoài
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
+          icon: ImageHelper.loadAssetImage(
+            "assets/images/ic_error.png",
+            width: 48,
+            height: 48,
           ),
-          actions: <Widget>[
-            TextButton(onPressed: onPressPositive, child: const Text('Yes')),
-            TextButton(onPressed: onPressNegative, child: const Text('No')),
-          ],
+          content: SingleChildScrollView(
+            child: Column(children: [
+              Text(
+                title,
+                style: AppStyles.heading2.copyWith(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(height: 5.0),
+              Text(
+                message,
+                style: AppStyles.heading3.copyWith(
+                  color: Colors.black45,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12.0),
+              ElevatedButton(
+                style: ButtonStyle(
+                  padding: WidgetStateProperty.all<EdgeInsets>(
+                    const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 10.0),
+                  ),
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(Colors.red.shade400),
+                ),
+                onPressed: onPressAction,
+                child: Text(
+                  'Try again',
+                  style: AppStyles.heading4.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ]),
+          ),
         );
       },
     );

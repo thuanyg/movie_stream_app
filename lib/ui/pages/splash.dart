@@ -64,7 +64,7 @@ class _SplashState extends State<Splash> {
     } else {
       try {
         final verifyTokenResponse =
-            await retry(() => loginProvider.handleValidToken());
+            await loginProvider.handleValidToken();
 
         if (verifyTokenResponse != null && verifyTokenResponse.valid) {
           String? id = verifyTokenResponse.userid.toString();
@@ -83,12 +83,9 @@ class _SplashState extends State<Splash> {
       } on Exception catch (e) {
         AppUtil.showErrorDialog(
             context: context,
-            title: "Error",
-            message: "Error when connecting. Retry?",
-            onPressNegative: () async {
-              SystemNavigator.pop(animated: true);
-            },
-            onPressPositive: () async {
+            title: "Connection Failed",
+            message: "Unable to connect to the server. Please check your internet connection and try again.",
+            onPressAction: () async {
               Navigator.of(context).pop();
               await verifyUser();
             });

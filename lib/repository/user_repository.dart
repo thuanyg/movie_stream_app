@@ -76,7 +76,13 @@ class UserRepository
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw TimeoutException('Connection timed out');
+        },
       );
+
       final data = json.decode(response.body);
 
       switch (response.statusCode) {

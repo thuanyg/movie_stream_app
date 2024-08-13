@@ -2,9 +2,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/configs/constants.dart';
+import 'package:movie_stream/dto/response/movie_by_genre/api_response.dart';
+import 'package:movie_stream/dto/response/movie_by_genre/items.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
 import 'package:movie_stream/models/items_latest_movie.dart';
 import 'package:movie_stream/providers/movie/movie_provider.dart';
+import 'package:movie_stream/ui/pages/detail/detail_page.dart';
 import 'package:movie_stream/ui/pages/home/components/category_label.dart';
 import 'package:movie_stream/ui/pages/home/components/search_bar.dart';
 import 'package:movie_stream/models/slider.dart';
@@ -59,6 +63,9 @@ class _HomeScreenState extends State<HomeScreen>
   ];
 
   late Future<List<ItemsLatestMovie>?> _latestMoviesFuture;
+  late Future<List<Item>?> _seriesMoviesFuture;
+  late Future<List<Item>?> _oddMoviesFuture;
+
   late MovieProvider provider;
 
   @override
@@ -68,6 +75,8 @@ class _HomeScreenState extends State<HomeScreen>
     provider = Provider.of<MovieProvider>(context, listen: false);
 
     _latestMoviesFuture = provider.getListLatestMovie(1);
+    _seriesMoviesFuture = provider.getMoviesByGenre(PHIM_BO, 1);
+    _oddMoviesFuture = provider.getMoviesByGenre(PHIM_LE, 1);
   }
 
   @override
@@ -131,64 +140,62 @@ class _HomeScreenState extends State<HomeScreen>
                         print("See allllllllllll");
                       },
                     ),
-                    provider.isLoading
-                        ? const Center(child: CustomCircularProgressIndicator())
-                        : FutureBuilder<List<ItemsLatestMovie>?>(
-                            future: _latestMoviesFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CustomCircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return const Center(
-                                    child: Text('Đã xảy ra lỗi'));
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return const Center(
-                                    child: Text('Không có phim nào'));
-                              } else {
-                                final latestMovies = snapshot.data!;
-                                return SizedBox(
-                                  height: size.height / 3.2,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: latestMovies.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        width: size.width * 0.3,
-                                        margin: const EdgeInsets.symmetric(
-                                          horizontal: 8.0,
+                    SizedBox(
+                      height: size.height / 3.2,
+                      child: FutureBuilder<List<ItemsLatestMovie>?>(
+                        future: _latestMoviesFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CustomCircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return const Center(child: Text('Đã xảy ra lỗi'));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                                child: Text('Không có phim nào'));
+                          } else {
+                            final latestMovies = snapshot.data!;
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: latestMovies.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  width: size.width * 0.3,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Handle navigate to detail movie (agr = slug)
+                                          Navigator.of(context).pushNamed(
+                                            DetailPage.routeName,
+                                            arguments: latestMovies[index].slug,
+                                          );
+                                        },
+                                        child: ThumbnailImage(
+                                          latestMovies[index].posterUrl ?? '',
                                         ),
-                                        child: Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                AppUtil.showSnackBar(context,
-                                                    'Movies ID: ${latestMovies[index].sId}');
-                                              },
-                                              child: ThumbnailImage(
-                                                latestMovies[index].posterUrl ??
-                                                    '',
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              latestMovies[index].name ??
-                                                  'No name',
-                                              style: AppStyles.heading4,
-                                              textAlign: TextAlign.center,
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        latestMovies[index].name ?? 'No name',
+                                        style: AppStyles.heading4,
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ],
                                   ),
                                 );
-                              }
-                            },
-                          ),
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ),
 
                     // Odd films
                     Category(
@@ -199,30 +206,54 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                     SizedBox(
                       height: size.height / 3,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        // Hỗ trợ việc xây dựng ListView bên trong Column
-                        itemCount: thumbImages.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            width: size.width * 0.3,
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(children: [
-                              ImageHelper.loadNetworkImage(
-                                  thumbImages[index].imageLink.toString(),
-                                  radius: BorderRadius.circular(10),
-                                  height: 180,
-                                  width: 150,
-                                  fit: BoxFit.fitHeight),
-                              Text(
-                                "Phim le",
-                                style: AppStyles.heading3,
-                              )
-                            ]),
-                          );
-                        },
-                      ),
+                      child: FutureBuilder(
+                          future: _oddMoviesFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CustomCircularProgressIndicator(),
+                              );
+                            }
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: snapshot.data!.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    width: size.width * 0.3,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // Handle navigate to detail movie (agr = slug)
+                                        Navigator.of(context).pushNamed(
+                                          DetailPage.routeName,
+                                          arguments: snapshot.data![index].slug,
+                                        );
+                                      },
+                                      child: Column(children: [
+                                        ImageHelper.loadNetworkImage(
+                                            "https://phimimg.com/${snapshot.data![index].posterUrl}",
+                                            radius: BorderRadius.circular(10),
+                                            height: 180,
+                                            width: 150,
+                                            fit: BoxFit.fitHeight),
+                                        Text(
+                                          snapshot.data?[index].name ?? "",
+                                          style: AppStyles.heading3,
+                                        )
+                                      ]),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                            return const Center(
+                              child: Text('No data available'),
+                            );
+                          }),
                     ),
 
                     // Tab Categories

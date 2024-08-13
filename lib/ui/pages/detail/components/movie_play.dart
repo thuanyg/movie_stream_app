@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
 
+
 class MoviePlay extends StatelessWidget {
-  const MoviePlay({
+  String? thumbImg;
+  VoidCallback onNavigate;
+  MoviePlay({
     super.key,
+    required this.thumbImg,
+    required this.onNavigate,
   });
 
   @override
@@ -11,14 +16,14 @@ class MoviePlay extends StatelessWidget {
     return SizedBox(
       height: 260,
       child: InkWell(
-        onTap: (){},
+        onTap: onNavigate,
         child: Stack(
           fit: StackFit.expand,
           children: [
             Opacity(
               opacity: .8,
               child: ImageHelper.loadNetworkImage(
-                "https://phim.nguonc.com/public/images/Post/3/ta-ninh-an-1.jpg",
+                thumbImg ?? "",
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),

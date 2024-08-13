@@ -19,8 +19,15 @@ const List<Onboarding> onboardingPages = [
   ),
 ];
 
+// API
 const String APP_BASE_URL = "https://watchez.onrender.com/watchez";
 const String MOVIE_API_URL = "https://phimapi.com";
+
+const String PHIM_BO = "phim-bo";
+const String PHIM_LE = "phim-le";
+const String PHIM_HOAT_HINH = "hoat-hinh";
+const String TV_SHOWS = "tv-shows";
+
 
 // DataStorage
 const String USER_TOKEN_KEY = "userToken";
