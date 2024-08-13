@@ -22,7 +22,6 @@ class DetailPage extends StatelessWidget {
     final movieProvider = Provider.of<MovieProvider>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xff15141F),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 16),
         child: FutureBuilder<MovieDetail>(

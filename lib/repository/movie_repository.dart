@@ -5,6 +5,7 @@ import 'package:movie_stream/configs/constants.dart';
 import 'package:movie_stream/dto/response/movie_by_genre/api_response.dart';
 import 'package:movie_stream/dto/response/movies/detail_movie_response.dart';
 import 'package:movie_stream/dto/response/movies/latest_movie_response.dart';
+import 'package:movie_stream/dto/response/movies/search_response.dart';
 import 'package:movie_stream/networks/status_code.dart';
 
 class MovieRepository {
@@ -65,6 +66,27 @@ class MovieRepository {
       }
       throw Exception(
           'Failed to load latest movies: status code ${response.statusCode}');
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  // Search movie
+  Future<SearchResponse> searchMovie(
+      {required String keyword, required int page, required int limit}) async {
+    final String endPoint =
+        '/v1/api/tim-kiem?keyword=$keyword&page=$page&limit=$limit';
+    final String url = '$MOVIE_API_URL/$endPoint';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == HttpStatusCode.OK.code) {
+        final data = json.decode(response.body);
+        return SearchResponse.fromJson(data);
+      }
+      throw Exception(
+          'Failed to search movies');
     } on Exception catch (e) {
       throw Exception(e);
     }

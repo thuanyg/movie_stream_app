@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/ui/pages/search_page.dart';
 
 class CustomSearchBar extends StatelessWidget {
   const CustomSearchBar({
@@ -19,8 +20,7 @@ class CustomSearchBar extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
           color: const Color.fromARGB(255, 58, 54, 79),
-          border:
-              Border.all(color: AppColors.textHintColor, width: .2)),
+          border: Border.all(color: AppColors.textHintColor, width: .2)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
@@ -44,6 +44,10 @@ class CustomSearchBar extends StatelessWidget {
                       .copyWith(color: AppColors.textHintColor),
                   border: InputBorder.none,
                 ),
+                onSubmitted: (value) {
+                  Navigator.of(context)
+                      .pushNamed(SearchPage.routeName, arguments: value.trim());
+                },
               ),
             ),
           ],

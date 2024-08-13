@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/constants.dart';
 import 'package:movie_stream/dto/request/auth_request.dart';
-import 'package:movie_stream/dto/response/api_response.dart';
-import 'package:movie_stream/dto/response/user_info_response.dart';
-import 'package:movie_stream/dto/response/verify_token_response.dart';
+import 'package:movie_stream/dto/response/users/api_response.dart';
+import 'package:movie_stream/dto/response/users/user_info_response.dart';
+import 'package:movie_stream/dto/response/users/verify_token_response.dart';
 import 'package:movie_stream/networks/status_code.dart';
 import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/repository/auth_repositoy.dart';

@@ -29,7 +29,7 @@ class SignupProvider with ChangeNotifier {
     try {
       final response = await _userRepository.post(userCreationRequest);
       final statusCode = response.statusCode;
-      final message = response.message ?? 'Unknown error occurred';
+      final message = response.message;
 
       if (statusCode == HttpStatusCode.OK.code) {
         AppUtil.showSnackBar(context, 'Sign up successful!');

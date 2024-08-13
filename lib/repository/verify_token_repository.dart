@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:movie_stream/configs/constants.dart';
-import 'package:movie_stream/dto/response/api_response.dart';
-import 'package:movie_stream/dto/response/verify_token_response.dart';
+import 'package:movie_stream/dto/response/users/api_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie_stream/dto/response/users/verify_token_response.dart';
 import 'package:movie_stream/networks/exception/http_exception.dart';
 
 

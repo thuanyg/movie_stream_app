@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
-import 'package:movie_stream/dto/response/user_info_response.dart';
+import 'package:movie_stream/dto/response/users/user_info_response.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
 import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/ui/pages/login/login_page.dart';

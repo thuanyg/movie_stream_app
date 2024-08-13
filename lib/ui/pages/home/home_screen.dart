@@ -5,6 +5,7 @@ import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/configs/constants.dart';
 import 'package:movie_stream/dto/response/movie_by_genre/api_response.dart';
 import 'package:movie_stream/dto/response/movie_by_genre/items.dart';
+import 'package:movie_stream/dto/response/movies/movie.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
 import 'package:movie_stream/models/items_latest_movie.dart';
 import 'package:movie_stream/providers/movie/movie_provider.dart';
@@ -42,28 +43,15 @@ class _HomeScreenState extends State<HomeScreen>
         "https://phim.nguonc.com/public/images/Post/8/bung-chay-nao-co-gai-bong-chuyen-1.jpg",
         "slink"),
   ];
-  final List<SliderModel> thumbImages = [
-    SliderModel(
-        "https://phim.nguonc.com/public/images/Post/9/co-chau.jpg", "slink"),
-    SliderModel(
-        "https://phim.nguonc.com/public/images/Post/6/bi-mat-cua-chung-ta-phan-1.jpg",
-        "slink"),
-    SliderModel(
-        "https://phim.nguonc.com/public/images/Post/3/ta-ninh-an.jpg", "slink"),
-    SliderModel(
-        "https://phim.nguonc.com/public/images/Post/8/bung-chay-nao-co-gai-bong-chuyen.jpg",
-        "slink"),
-  ];
-  final List<String> categories = [
-    "Phim bộ",
-    "Phim đang chiếu",
-    "Hàn Quốc",
-    "Trung Quốc",
-    "Việt Nam"
-  ];
+
+  final Map<String, String> categories = {
+    PHIM_HOAT_HINH: "Hoạt hình",
+    PHIM_BO: "Phim bộ",
+    TV_SHOWS: "TV Shows",
+  };
 
   late Future<List<ItemsLatestMovie>?> _latestMoviesFuture;
-  late Future<List<Item>?> _seriesMoviesFuture;
+  late Future<List<Item>?> _moviesByGenreFuture;
   late Future<List<Item>?> _oddMoviesFuture;
 
   late MovieProvider provider;
@@ -71,12 +59,19 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-
     provider = Provider.of<MovieProvider>(context, listen: false);
 
     _latestMoviesFuture = provider.getListLatestMovie(1);
-    _seriesMoviesFuture = provider.getMoviesByGenre(PHIM_BO, 1);
     _oddMoviesFuture = provider.getMoviesByGenre(PHIM_LE, 1);
+
+    // Movie by each tab
+    _moviesByGenreFuture = provider.getMoviesByGenre(categories.keys.first, 1);
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -95,8 +90,8 @@ class _HomeScreenState extends State<HomeScreen>
                 // Slider
                 CarouselSlider(
                   options: CarouselOptions(
-                    height: 180,
-                    aspectRatio: 0.7,
+                    height: 160,
+                    aspectRatio: 16/9,
                     viewportFraction: 0.8,
                     initialPage: 0,
                     enableInfiniteScroll: true,
@@ -150,7 +145,10 @@ class _HomeScreenState extends State<HomeScreen>
                             return const Center(
                                 child: CustomCircularProgressIndicator());
                           } else if (snapshot.hasError) {
-                            return const Center(child: Text('Đã xảy ra lỗi'));
+                            return Center(
+                                child: Text(
+                                    'Đã xảy ra lỗi. Làm mới để thử lại.',
+                                    style: AppStyles.heading4));
                           } else if (!snapshot.hasData ||
                               snapshot.data!.isEmpty) {
                             return const Center(
@@ -227,10 +225,10 @@ class _HomeScreenState extends State<HomeScreen>
                                         horizontal: 8.0),
                                     child: GestureDetector(
                                       onTap: () {
-                                        // Handle navigate to detail movie (agr = slug)
-                                        Navigator.of(context).pushNamed(
-                                          DetailPage.routeName,
-                                          arguments: snapshot.data![index].slug,
+                                        handleNavigateToDetailPage(
+                                          context: context,
+                                          routeName: DetailPage.routeName,
+                                          data: snapshot.data![index].slug,
                                         );
                                       },
                                       child: Column(children: [
@@ -250,9 +248,10 @@ class _HomeScreenState extends State<HomeScreen>
                                 },
                               );
                             }
-                            return const Center(
-                              child: Text('No data available'),
-                            );
+                            return Center(
+                                child: Text(
+                                    'Đã xảy ra lỗi. Làm mới để thử lại.',
+                                    style: AppStyles.heading4));
                           }),
                     ),
 
@@ -272,13 +271,20 @@ class _HomeScreenState extends State<HomeScreen>
                                       : AppColors.bottomNavColor,
                                   borderRadius: BorderRadius.circular(20)),
                               child: TextButton(
-                                onPressed: () {
+                                child: Text(
+                                  categories.values.elementAt(index),
+                                  style: AppStyles.heading4,
+                                ),
+                                onPressed: () async {
                                   setState(() {
                                     currentTabSelectedIndex = index;
+                                    _moviesByGenreFuture =
+                                        provider.getMoviesByGenre(
+                                      categories.keys.elementAt(index),
+                                      1,
+                                    );
                                   });
                                 },
-                                child: Text(categories[index],
-                                    style: AppStyles.heading4),
                               ),
                             );
                           }),
@@ -290,46 +296,75 @@ class _HomeScreenState extends State<HomeScreen>
               ],
             ),
           ),
-          // TabView
           SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 16,
               crossAxisSpacing: 1,
             ),
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return Stack(
-                children: [
-                  Opacity(
-                    opacity: .6,
-                    child: Center(
-                      child: ImageHelper.loadNetworkImage(
-                          thumbImages[3].imageLink.toString(),
-                          radius: BorderRadius.circular(10),
-                          height: 200,
-                          width: 150,
-                          fit: BoxFit.cover),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                          bottom: 8.0, left: 28, right: 28),
-                      child: Text(
-                        categories[currentTabSelectedIndex],
-                        style: AppStyles.heading3
-                            .copyWith(color: AppColors.textColor),
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }, childCount: 10),
-          )
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return FutureBuilder(
+                  future: _moviesByGenreFuture,
+                  // Replace this with your future
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                          child: CustomCircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (snapshot.hasData) {
+                      final data = snapshot.data;
+                      return GestureDetector(
+                        onTap: () {
+                          handleNavigateToDetailPage(
+                            context: context,
+                            routeName: DetailPage.routeName,
+                            data: snapshot.data![index].slug,
+                          );
+                        },
+                        child: Stack(
+                          children: [
+                            Opacity(
+                              opacity: .6,
+                              child: Center(
+                                child: ImageHelper.loadNetworkImage(
+                                    "https://phimimg.com/${data![index].posterUrl}",
+                                    radius: BorderRadius.circular(10),
+                                    height: 200,
+                                    width: 150,
+                                    fit: BoxFit.cover),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    bottom: 2.0, left: 28, right: 28),
+                                child: Text(
+                                  data[index].name.toString(),
+                                  style: AppStyles.heading3.copyWith(
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const Center(child: Text('No data available'));
+                    }
+                  },
+                );
+              },
+              childCount: 10, // Number of items in the grid
+            ),
+          ),
         ],
       ),
     ));
@@ -338,4 +373,15 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+
+  void handleNavigateToDetailPage(
+      {required BuildContext context,
+      required String routeName,
+      required String? data}) {
+    // Handle navigate to detail movie (agr = slug)
+    Navigator.of(context).pushNamed(
+      routeName,
+      arguments: data,
+    );
+  }
 }

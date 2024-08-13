@@ -23,6 +23,7 @@ const List<Onboarding> onboardingPages = [
 const String APP_BASE_URL = "https://watchez.onrender.com/watchez";
 const String MOVIE_API_URL = "https://phimapi.com";
 
+const int LIMIT_SEARCH_RESULT = 20;
 const String PHIM_BO = "phim-bo";
 const String PHIM_LE = "phim-le";
 const String PHIM_HOAT_HINH = "hoat-hinh";

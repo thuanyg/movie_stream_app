@@ -1,4 +1,4 @@
-import 'package:movie_stream/dto/response/api_response.dart';
+import 'package:movie_stream/dto/response/users/api_response.dart';
 
 abstract class Repository<T, TPost, TUpdate> {
   Future<ApiResponse<dynamic>> get();

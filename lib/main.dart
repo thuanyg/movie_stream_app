@@ -11,7 +11,7 @@ import 'package:movie_stream/repository/user_repository.dart';
 import 'package:movie_stream/repository/verify_token_repository.dart';
 import 'package:movie_stream/routes.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
-import 'package:movie_stream/ui/pages/stream/stream_page.dart';
+import 'package:movie_stream/ui/pages/search_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
