@@ -11,8 +11,8 @@ class ThumbnailImage extends StatelessWidget {
     return ImageHelper.loadNetworkImage(
         imageLink,
         radius: BorderRadius.circular(10),
-        height: 160,
-        width: 110,
+        height: 150,
+        width: 100,
         fit: BoxFit.cover);
   }
 }

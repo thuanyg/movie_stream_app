@@ -46,7 +46,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> with AutomaticKeepAlive
                 onTap: (){
                   goToDetailPage();
                 },
-                child: Container(
+                child: SizedBox(
                   height: MediaQuery.of(context).size.height / 5,
                   // color: Colors.grey,
                   child: Row(

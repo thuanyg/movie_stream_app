@@ -14,27 +14,28 @@ class MovieProvider with ChangeNotifier {
   MovieDetail? movieDetail;
   int _currentEpisode = 1;
 
-  // For search/pagination module
+  // Search/pagination module
   bool isSearchLoading = false;
   bool _isLastPage = false;
   int currentPage = 1;
   List<Item> listMovieResult = [];
 
+  // See all movies by genre pagination
+  bool _isSeeAllLoading = false;
+  bool _isSeeAllLastPage = false;
+  int _currentPageSeeAll = 1;
+  List<Item> listMovieByGenre = [];
+
+  // See all latest movies pagination
+  bool _isLatestLoading = false;
+  bool _isLatestLastPage = false;
+  int _currentPageLatest = 1;
+  List<ItemsLatestMovie> listLatestMovie = [];
+
   // Dependency Injection Repository
   final MovieRepository movieRepository;
 
   MovieProvider(this.movieRepository);
-
-  // Getter
-  MovieDetail? get getSelectedMovie => movieDetail;
-
-  int get getCurrentEpisode => _currentEpisode;
-
-  bool get isLoading => isSearchLoading;
-
-  bool get isLastPage => _isLastPage;
-
-  List<Item> get getListMovieResult => listMovieResult;
 
   // Functions
   void updateSelectedMovie(MovieDetail newMovie) {
@@ -48,16 +49,65 @@ class MovieProvider with ChangeNotifier {
   }
 
   Future<List<ItemsLatestMovie>?> getListLatestMovie(int page) async {
+    _isLatestLoading = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+
     final LatestMovieResponse response =
         await movieRepository.fetchLatestMovie(page);
+
+    if (_currentPageLatest > response.pagination!.totalPages!.toInt()) {
+      _isLatestLoading = false;
+      _isLatestLastPage = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
+      return [];
+    }
+
+    listLatestMovie.addAll(response.items!);
+    _isLatestLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+
     return response.items;
   }
 
-  Future<List<Item>?> getMoviesByGenre(String genre, int page) async {
+  Future<List<Item>?> getMoviesByCategory(String category, int page) async {
+    final MovieByGenreResponse response =
+        await movieRepository.fetchMoviesByGenre(category, page);
+    return response.data?.items;
+  }
+
+  Future<List<Item>> getMoviesByGenre(String genre, int page) async {
+    _isSeeAllLoading = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+
     final MovieByGenreResponse response =
         await movieRepository.fetchMoviesByGenre(genre, page);
-    List<Item>? list = response.data?.items;
-    return list;
+
+    Pagination? pagination = response.data!.params?.pagination;
+
+    if (currentPageSeeAll > pagination!.totalPages!) {
+      _isSeeAllLoading = false;
+      _isSeeAllLastPage = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
+      return [];
+    }
+
+    listMovieByGenre.addAll(response.data!.items);
+    _isSeeAllLoading = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+
+    return response.data!.items;
   }
 
   Future<MovieDetail> getMovieDetail(String slug) async {
@@ -91,6 +141,20 @@ class MovieProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void loadMoreLatestMovie() {
+    _currentPageLatest++;
+    if (!_isLatestLoading && !_isLatestLastPage) {
+      getListLatestMovie(_currentPageLatest);
+    }
+  }
+
+  void loadMoreGenreMovie(String genre) {
+    _currentPageSeeAll++;
+    if (!_isSeeAllLoading && !_isSeeAllLastPage) {
+      getMoviesByGenre(genre, _currentPageSeeAll);
+    }
+  }
+
   void loadMoreMovies(String keyword) {
     currentPage++;
     if (!isLastPage && !isLoading) {
@@ -104,5 +168,42 @@ class MovieProvider with ChangeNotifier {
     currentPage = 1;
     _isLastPage = false;
     isSearchLoading = false;
+
+    _isSeeAllLastPage = false;
+    _isSeeAllLoading = false;
+    listMovieByGenre.clear();
+    _currentPageSeeAll = 1;
+
+    _isLatestLastPage = false;
+    _isLatestLoading = false;
+    _currentPageLatest = 1;
+    listLatestMovie.clear();
   }
+
+  // Getter
+  MovieDetail? get getSelectedMovie => movieDetail;
+
+  int get getCurrentEpisode => _currentEpisode;
+
+  bool get isLoading => isSearchLoading;
+
+  bool get isLastPage => _isLastPage;
+
+  int get currentEpisode => _currentEpisode;
+
+  List<Item> get getListMovieResult => listMovieResult;
+
+  bool get isSeeAllLoading => _isSeeAllLoading;
+
+  bool get isSeeAllLastPage => _isSeeAllLastPage;
+
+  int get currentPageSeeAll => _currentPageSeeAll;
+
+  bool get isLatestLoading => _isLatestLoading;
+
+  List<Item> get getListMovieByGenre => listMovieByGenre;
+
+  bool get isLatestLastPage => _isLatestLastPage;
+
+  int get currentPageLatest => _currentPageLatest;
 }

@@ -5,7 +5,7 @@ import 'package:movie_stream/dto/request/auth_request.dart';
 import 'package:movie_stream/modules/validator.dart';
 import 'package:movie_stream/providers/auth/login_provider.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
-import 'package:movie_stream/ui/pages/signup_page.dart';
+import 'package:movie_stream/ui/pages/signup/signup_page.dart';
 import 'package:movie_stream/ui/widgets/button_submit.dart';
 import 'package:movie_stream/ui/widgets/text_field.dart';
 import 'package:movie_stream/utils/app_utils.dart';

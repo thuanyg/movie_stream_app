@@ -23,11 +23,34 @@ const List<Onboarding> onboardingPages = [
 const String APP_BASE_URL = "https://watchez.onrender.com/watchez";
 const String MOVIE_API_URL = "https://phimapi.com";
 
+const int LIMIT_INITIAL = 18;
 const int LIMIT_SEARCH_RESULT = 20;
+
 const String PHIM_BO = "phim-bo";
 const String PHIM_LE = "phim-le";
 const String PHIM_HOAT_HINH = "hoat-hinh";
 const String TV_SHOWS = "tv-shows";
+
+const String HANH_DONG = "hanh-dong";
+const String CO_TRANG = "co-trang";
+const String HOC_DUONG = "hoc-duong";
+const String HAI_HUOC = "hai-huoc";
+const String KINH_DI = "kinh-di";
+const String TAM_LY = "tam-ly";
+const String VIEN_TUONG = "vien-tuong";
+
+const Map<String, String> categories = {
+  HANH_DONG: "Hành động",
+  CO_TRANG: "Cổ trang",
+  HOC_DUONG: "Học đường",
+  HAI_HUOC: "Hài hước",
+  KINH_DI: "Kinh dị",
+  TAM_LY: "Tâm lý",
+  VIEN_TUONG: "Viễn tưởng"
+};
+
+
+
 
 
 // DataStorage

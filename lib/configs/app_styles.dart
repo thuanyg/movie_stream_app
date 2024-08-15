@@ -36,7 +36,7 @@ class AppStyles {
 
   static TextStyle movieName = const TextStyle(
     color: AppColors.textColor,
-    fontSize: 24.0,
+    fontSize: 20.0,
     fontWeight: FontWeight.bold,
   );
 

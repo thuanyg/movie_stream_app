@@ -31,8 +31,6 @@ class ImageHelper {
         borderRadius: radius ?? BorderRadius.zero,
         child: CachedNetworkImage(
           imageUrl: imageLink,
-          placeholder: (context, url) =>
-              const Center(child: CircularProgressIndicator()),
           errorWidget: (context, url, error) =>
               const Center(child: Icon(Icons.error, color: Colors.red)),
           width: width,

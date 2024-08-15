@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
+import 'package:movie_stream/ui/widgets/progress_indicator.dart';
 
 class AppUtil {
   static void showSnackBar(BuildContext context, String message) {
@@ -34,11 +35,7 @@ class AppUtil {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                  backgroundColor: AppColors.secondColor,
-                ),
-                const SizedBox(height: 12),
+                const CustomLoadingProgress(),
                 Text(
                   message,
                   style: AppStyles.heading3.copyWith(

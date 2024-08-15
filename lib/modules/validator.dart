@@ -8,7 +8,7 @@ class Validator {
   static String? validateEmail(String? value) {
     const pattern = r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
     final regex = RegExp(pattern);
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return 'Email is required';
     } else if (!regex.hasMatch(value)) {
       return 'Enter a valid email address';
@@ -17,7 +17,7 @@ class Validator {
   }
 
   static String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return 'Password is required';
     }
 

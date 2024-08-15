@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/configs/constants.dart';
@@ -8,7 +7,9 @@ import 'package:movie_stream/ui/pages/login/login_page.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
+
   static const String routeName = '/OnboardingPage';
+
   @override
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
@@ -42,7 +43,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       height: 200,
                       fit: BoxFit.fitHeight,
                     ),
-                    const SizedBox(height: 16), // Add spacing between image and title
+                    const SizedBox(height: 16),
+                    // Add spacing between image and title
                     Text(
                       onboardingPages.elementAt(index).title,
                       style: AppStyles.heading2.copyWith(
@@ -50,7 +52,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         fontSize: 24,
                       ),
                     ),
-                    const SizedBox(height: 8), // Add spacing between title and description
+                    const SizedBox(height: 8),
+                    // Add spacing between title and description
                     Text(
                       onboardingPages.elementAt(index).description,
                       textAlign: TextAlign.center,
@@ -68,19 +71,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
             left: 0,
             right: 0,
             child: Container(
-              alignment: Alignment.center, 
+              alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, LoginPage.routeName);
+                      Navigator.pushReplacementNamed(
+                          context, LoginPage.routeName);
                     },
                     child: Text(
                       "Skip",
                       style: AppStyles.heading3.copyWith(
-                        color: AppColors.primaryColor, // Customize the skip button color
+                        color: AppColors
+                            .primaryColor, // Customize the skip button color
                       ),
                     ),
                   ),
@@ -95,7 +100,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     onPressed: () {
                       if (currentIndex == onboardingPages.length - 1) {
                         // Navigate to home page or next screen
-                        Navigator.pushReplacementNamed(context, LoginPage.routeName);
+                        Navigator.pushReplacementNamed(
+                            context, LoginPage.routeName);
                       } else {
                         pageController.nextPage(
                           duration: const Duration(milliseconds: 300),

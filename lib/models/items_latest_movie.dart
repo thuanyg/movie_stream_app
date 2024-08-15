@@ -9,6 +9,8 @@ class ItemsLatestMovie {
   String? posterUrl;
   String? thumbUrl;
   int? year;
+  String? status;
+  String? episodeCurrent;
 
   ItemsLatestMovie(
       {this.modified,
@@ -18,7 +20,9 @@ class ItemsLatestMovie {
       this.originName,
       this.posterUrl,
       this.thumbUrl,
-      this.year});
+      this.year,
+      this.status,
+      this.episodeCurrent});
 
   ItemsLatestMovie.fromJson(Map<String, dynamic> json) {
     modified = json['modified'] != null
@@ -31,6 +35,8 @@ class ItemsLatestMovie {
     posterUrl = json['poster_url'];
     thumbUrl = json['thumb_url'];
     year = json['year'];
+    status = json['status'];
+    episodeCurrent = json['episode_current'];
   }
 
   Map<String, dynamic> toJson() {

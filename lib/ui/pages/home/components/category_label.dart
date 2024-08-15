@@ -23,9 +23,8 @@ class Category extends StatelessWidget {
                 style:
                     AppStyles.heading3.copyWith(fontWeight: FontWeight.bold)),
           ),
-          InkWell(
-            borderRadius: BorderRadius.circular(10),
-            onTap: onSeeAll,
+          TextButton(
+            onPressed: onSeeAll,
             child: Text(
               "Tất cả >",
               style:

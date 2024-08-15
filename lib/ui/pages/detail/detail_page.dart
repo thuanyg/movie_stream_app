@@ -35,7 +35,7 @@ class DetailPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const CustomCircularProgressIndicator(),
+                      const CustomLoadingProgress(),
                       const SizedBox(height: 8.0),
                       Text(
                         "Đang tải...",
@@ -57,7 +57,7 @@ class DetailPage extends StatelessWidget {
                 children: [
                   MoviePlay(
                     thumbImg: movieDetail?.movie.thumbUrl,
-                    onNavigate: (){
+                    onNavigate: () {
                       handleNavigateToStreamPage(context, movieDetail!);
                     },
                   ),
@@ -156,7 +156,6 @@ class DetailPage extends StatelessWidget {
                           movieDetail.movie.actor
                               .map((actor) => actor)
                               .join(", "),
-                          textAlign: TextAlign.justify,
                           maxLines: 5,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -199,7 +198,8 @@ class DetailPage extends StatelessWidget {
   }
 
   void handleNavigateToStreamPage(BuildContext context, MovieDetail movie) {
-    Provider.of<MovieProvider>(context, listen: false).updateSelectedMovie(movie);
+    Provider.of<MovieProvider>(context, listen: false)
+        .updateSelectedMovie(movie);
     Navigator.of(context).pushNamed(MovieStreamPage.routeName);
   }
 }

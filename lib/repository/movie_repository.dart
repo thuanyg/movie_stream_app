@@ -11,7 +11,7 @@ import 'package:movie_stream/networks/status_code.dart';
 class MovieRepository {
   // Get latest movies
   Future<LatestMovieResponse> fetchLatestMovie(int page) async {
-    final String endPoint = 'danh-sach/phim-moi-cap-nhat?page=$page';
+    final String endPoint = 'danh-sach/phim-moi-cap-nhat-v2?page=$page&limit=$LIMIT_INITIAL';
     final String url = '$MOVIE_API_URL/$endPoint';
 
     try {
@@ -33,7 +33,12 @@ class MovieRepository {
   // Get list movie by genre
   Future<MovieByGenreResponse> fetchMoviesByGenre(
       String genre, int page) async {
-    final String endPoint = '/v1/api/danh-sach/${genre}?page=$page';
+    String endPoint = "";
+    if ([PHIM_BO, PHIM_HOAT_HINH, PHIM_LE, TV_SHOWS].contains(genre)) {
+      endPoint = '/v1/api/danh-sach/$genre?page=$page&limit=$LIMIT_INITIAL';
+    } else {
+      endPoint = '/v1/api/the-loai/$genre?page=$page&limit=$LIMIT_INITIAL';
+    }
     final String url = '$MOVIE_API_URL/$endPoint';
 
     try {
@@ -85,8 +90,7 @@ class MovieRepository {
         final data = json.decode(response.body);
         return SearchResponse.fromJson(data);
       }
-      throw Exception(
-          'Failed to search movies');
+      throw Exception('Failed to search movies');
     } on Exception catch (e) {
       throw Exception(e);
     }

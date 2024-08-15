@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 
-class CustomCircularProgressIndicator extends StatelessWidget {
-  const CustomCircularProgressIndicator({super.key});
+class CustomLoadingProgress extends StatelessWidget {
+  const CustomLoadingProgress({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const CircularProgressIndicator(
-      color: AppColors.primaryColor,
-      backgroundColor: AppColors.secondColor,
+    return Container(
+        child: Lottie.asset(
+          height: 64,
+          "assets/animation/loading_animation.json",
+          fit: BoxFit.cover,
+        ),
     );
   }
 }

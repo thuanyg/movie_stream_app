@@ -105,7 +105,7 @@ class _SearchPageState extends State<SearchPage> {
           final movies = provider.getListMovieResult; // List of search result
 
           if (movies.isEmpty && provider.isLoading) {
-            return const Center(child: CustomCircularProgressIndicator());
+            return const Center(child: CustomLoadingProgress());
           }
 
           return ListView.builder(

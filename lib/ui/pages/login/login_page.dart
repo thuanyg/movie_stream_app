@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_strings.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/helpers/image_helper.dart';
-import 'package:movie_stream/ui/pages/home/home_page.dart';
 import 'package:movie_stream/ui/pages/login/components/login_form.dart';
-import 'package:movie_stream/ui/widgets/text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

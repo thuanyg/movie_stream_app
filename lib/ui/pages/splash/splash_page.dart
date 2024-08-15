@@ -8,19 +8,22 @@ import 'package:movie_stream/providers/auth/login_provider.dart';
 import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
 import 'package:movie_stream/ui/pages/login/login_page.dart';
-import 'package:movie_stream/ui/pages/onboarding_page.dart';
+import 'package:movie_stream/ui/pages/onboarding/onboarding_page.dart';
 import 'package:movie_stream/utils/app_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Splash extends StatefulWidget {
-  const Splash({super.key});
+class SplashPage extends StatefulWidget {
+
+  static const String routeName = '/SplashPage';
+  
+  const SplashPage({super.key});
 
   @override
-  State<Splash> createState() => _SplashState();
+  State<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashPageState extends State<SplashPage> {
   late LoginProvider loginProvider;
 
   @override

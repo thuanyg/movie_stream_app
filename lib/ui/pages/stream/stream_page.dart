@@ -126,7 +126,6 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
                         ),
                       ),
                       Container(
-                        height: size.height / 5,
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
@@ -179,7 +178,7 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
                       ),
                       const SizedBox(height: 8.0),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -401,8 +400,10 @@ class MainInfoMovie extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: const Color(0x4fa0a0a0),
                     borderRadius: BorderRadius.circular(4)),
-                child: Text("Phụ đề",
-                    style: AppStyles.heading5.copyWith(color: Colors.white30)),
+                child: Text(
+                  "Phụ đề",
+                  style: AppStyles.heading5.copyWith(color: Colors.white30),
+                ),
               )
             ],
           ),
