@@ -5,6 +5,7 @@ import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/networks/retry_connection.dart';
 import 'package:movie_stream/providers/auth/login_provider.dart';
+import 'package:movie_stream/providers/user/favorite_provider.dart';
 import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
 import 'package:movie_stream/ui/pages/login/login_page.dart';
@@ -25,11 +26,13 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   late LoginProvider loginProvider;
+  late FavoriteProvider favoriteProvider;
 
   @override
   void initState() {
     super.initState();
     loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    favoriteProvider = Provider.of<FavoriteProvider>(context, listen: false);
     verifyUser();
   }
 
@@ -74,7 +77,7 @@ class _SplashPageState extends State<SplashPage> {
           final userProvider =
               Provider.of<UserProvider>(context, listen: false);
           await userProvider.fetchUserByID(id);
-
+          await fetchInitialData(id);
           if (userProvider.getUser != null) {
             Navigator.pushReplacementNamed(context, HomePage.routeName);
           } else {
@@ -94,5 +97,9 @@ class _SplashPageState extends State<SplashPage> {
             });
       }
     }
+  }
+
+  Future<void> fetchInitialData(String userid) async {
+    final listFavorite = await favoriteProvider.getFavoriteMovies(userid);
   }
 }

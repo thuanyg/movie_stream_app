@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie_stream/configs/app_colors.dart';
 import 'package:movie_stream/configs/app_styles.dart';
+import 'package:movie_stream/dto/request/favorite_request.dart';
 import 'package:movie_stream/dto/response/movies/detail_movie_response.dart';
+import 'package:movie_stream/dto/response/users/favorite_response.dart';
 import 'package:movie_stream/providers/movie/movie_provider.dart';
+import 'package:movie_stream/providers/user/favorite_provider.dart';
+import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/utils/app_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -23,16 +27,19 @@ class MovieStreamPage extends StatefulWidget {
 class _MovieStreamPageState extends State<MovieStreamPage> {
   late FlickManager flickManager;
 
-  late MovieProvider provider;
+  late MovieProvider movieProvider;
+  late FavoriteProvider favoriteProvider;
   MovieDetail? movie;
 
   @override
   void initState() {
     super.initState();
 
-    provider = Provider.of<MovieProvider>(context, listen: false);
+    movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    favoriteProvider = Provider.of<FavoriteProvider>(context, listen: false);
 
-    movie = provider.getSelectedMovie!;
+    movie = movieProvider.getSelectedMovie!;
+    favoriteProvider.checkSavedMovie(movie!.movie.slug);
 
     flickManager = FlickManager(
         videoPlayerController: VideoPlayerController.networkUrl(
@@ -96,20 +103,44 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
                   child: Column(
                     children: [
                       const MainInfoMovie(),
-                      const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            Consumer<FavoriteProvider>(
+                              builder: (BuildContext context,
+                                  FavoriteProvider provider, Widget? child) {
+                                if (provider.isSaved) {
+                                  return FunctionButton(
+                                    buttonName: "Hủy yêu thích",
+                                    icon: Icons.favorite_outlined,
+                                    onSave: () async {
+                                      handleSaveMovie(movie);
+                                    },
+                                  );
+                                } else {
+                                  return FunctionButton(
+                                    buttonName: "Yêu thích",
+                                    icon: Icons.favorite_border_sharp,
+                                    onSave: () async {
+                                      handleSaveMovie(movie);
+                                    },
+                                  );
+                                }
+                              },
+                            ),
                             FunctionButton(
-                                buttonName: "Yêu thích",
-                                icon: Icons.favorite_border_sharp),
+                              buttonName: "Chia sẻ",
+                              icon: Icons.share,
+                              onSave: () {},
+                            ),
                             FunctionButton(
-                                buttonName: "Chia sẻ", icon: Icons.share),
-                            FunctionButton(
-                                buttonName: "Thông tin",
-                                icon: Icons.info_outlined),
+                              buttonName: "Thông tin",
+                              icon: Icons.info_outlined,
+                              onSave: () {},
+                            ),
                           ],
                         ),
                       ),
@@ -293,22 +324,54 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
       ),
     );
   }
+
+  Future<void> handleSaveMovie(MovieDetail? movie) async {
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
+
+    String userid = userProvider.getUser!.id;
+    // String userid = "0ab9ffd2-974a-4a13-b3b2-d0db0bd5b838";
+    print(movie?.movie.posterUrl);
+    FavoriteRequest movieRequest = FavoriteRequest(
+      userId: userid,
+      slug: movie?.movie.slug,
+      quality: movie?.movie.quality,
+      posterUrl: movie?.movie.posterUrl,
+      genres:
+          movie?.movie.category.map((category) => category.name).join(" | "),
+      language: movie?.movie.lang,
+      name: movie?.movie.name,
+      saveDate: DateTime.now(),
+    );
+
+    AppUtil.showLoadingDialog(context, "Đang xử lý...");
+    bool isSaved = await favoriteProvider.createFavoriteMovies(movieRequest);
+    AppUtil.hideLoadingDialog(context);
+    if (isSaved) {
+      AppUtil.showSnackBar(context, "Lưu phim thành công.");
+      await favoriteProvider.getFavoriteMovies(userid);
+    } else {
+      AppUtil.showSnackBar(context, "Đã xảy ra lỗi. Vui lòng thử lại!");
+    }
+  }
 }
 
 class FunctionButton extends StatelessWidget {
   final String buttonName;
   final IconData icon;
+  final VoidCallback onSave;
 
   const FunctionButton({
     required this.buttonName,
     required this.icon,
+    required this.onSave,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onSave,
       child: Column(
         children: [
           Icon(icon, color: Colors.grey, size: 22),

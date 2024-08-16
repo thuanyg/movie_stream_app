@@ -4,6 +4,7 @@ import 'package:movie_stream/configs/app_styles.dart';
 import 'package:movie_stream/dto/request/auth_request.dart';
 import 'package:movie_stream/modules/validator.dart';
 import 'package:movie_stream/providers/auth/login_provider.dart';
+import 'package:movie_stream/providers/user/favorite_provider.dart';
 import 'package:movie_stream/ui/pages/home/home_page.dart';
 import 'package:movie_stream/ui/pages/signup/signup_page.dart';
 import 'package:movie_stream/ui/widgets/button_submit.dart';
@@ -116,12 +117,18 @@ class _LoginFormState extends State<LoginForm> {
       AuthRequest authRequest = AuthRequest(username, username, password);
 
       final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+      final favoriteProvider =
+          Provider.of<FavoriteProvider>(context, listen: false);
 
       AppUtil.showLoadingDialog(context, "We are logging you in...");
 
       try {
         bool isLoginSuccess =
             await loginProvider.loginAuthenticate(context, authRequest);
+        if (isLoginSuccess) {
+          await favoriteProvider
+              .getFavoriteMovies("926cb207-bcf8-4bd1-ba95-3960753c1c27");
+        }
         AppUtil.hideLoadingDialog(context);
         if (isLoginSuccess && context.mounted) {
           Navigator.of(context).pushReplacementNamed(HomePage.routeName);

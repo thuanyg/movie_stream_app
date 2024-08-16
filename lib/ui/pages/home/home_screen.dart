@@ -203,6 +203,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                   'No name',
                                               style: AppStyles.heading4,
                                               textAlign: TextAlign.center,
+                                              maxLines: 2,
                                             )
                                           ],
                                         ),
@@ -294,8 +295,7 @@ class _HomeScreenState extends State<HomeScreen>
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                                child: CustomLoadingProgress());
+                            return const Center(child: CustomLoadingProgress());
                           } else if (snapshot.hasError) {
                             return Center(
                                 child: Text('Error: ${snapshot.error}'));
@@ -404,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             );
           } else {
-            final _serieMovies = snapshot.data!;
+            final _serieMovies = snapshot.data!.reversed.toList();
             return ListView.builder(
               shrinkWrap: true,
               itemCount: _serieMovies.length,
@@ -422,7 +422,8 @@ class _HomeScreenState extends State<HomeScreen>
                       );
                     },
                     child: Column(children: [
-                      ThumbnailImage("https://phimimg.com/${_serieMovies[index].posterUrl}"),
+                      ThumbnailImage(
+                          "https://phimimg.com/${_serieMovies[index].posterUrl}"),
                       Text(
                         _serieMovies[index].name ?? "",
                         style: AppStyles.heading4,
