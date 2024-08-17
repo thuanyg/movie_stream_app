@@ -1,6 +1,6 @@
 
 # WatchEz - Movie Stream App
-Movie app made in Flutter with clean architecture using Provider and the movie db API.
+Movie app made in Flutter with clean architecture using Provider and the phimapi.
 
 ## Features
 - Sign in/Sign up (Authentication)
@@ -13,10 +13,6 @@ Movie app made in Flutter with clean architecture using Provider and the movie d
 - Popular movies
 - Movie details
 - Movie cast
-- Movie reviews
-- Similar movies
-- Popular tv shows
-
 
 
 ## Screenshots
@@ -25,6 +21,7 @@ Movie app made in Flutter with clean architecture using Provider and the movie d
   <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_02.jpg" width="250" />
   <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_03.jpg" width="250" />
   <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_04.jpg" width="250" />
+  <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_09.jpg" width="250" />
   <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_05.jpg" width="250" />
   <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_06.jpg" width="250" />
   <img src="https://htthuan.id.vn/watchez/screenshots/screenshot_07.jpg" width="250" />
@@ -32,6 +29,10 @@ Movie app made in Flutter with clean architecture using Provider and the movie d
 </p>
 
 ## Installation
+
+### Install APK file
+- You can install .APK file from [WatchEz-APK_Release.apk](https://htthuan.id.vn/watchez/apk-release/)
+
 ### 1. Clone the repo
 ```bash[
 git clone https://github.com/thuanyg/movie_stream_app.git
@@ -52,24 +53,26 @@ flutter run
 
 ## Packages
 
-- [cupertino_icons](https://pub.dev/packages/cupertino_icons) ^1.0.6
-- [google_fonts](https://pub.dev/packages/google_fonts) ^6.2.1
-- [animated_splash_screen](https://pub.dev/packages/animated_splash_screen) ^1.3.0
-- [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons) ^0.13.1
-- [lottie](https://pub.dev/packages/lottie) ^3.1.2
-- [carousel_slider](https://pub.dev/packages/carousel_slider) ^5.0.0
-- [cached_network_image](https://pub.dev/packages/cached_network_image) ^3.4.0
-- [shared_preferences](https://pub.dev/packages/shared_preferences) ^2.2.3
-- [video_player](https://pub.dev/packages/video_player) ^2.9.0
-- [http](https://pub.dev/packages/http) ^1.2.2
-- [provider](https://pub.dev/packages/provider) ^6.1.2
-- [build_runner](https://pub.dev/packages/build_runner) ^2.4.0
-- [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage) ^9.2.2
-- [flick_video_player](https://pub.dev/packages/flick_video_player) ^0.9.0
-- [flutter_html](https://pub.dev/packages/flutter_html) ^3.0.0-beta.2
-- [url_launcher](https://pub.dev/packages/url_launcher) ^6.3.0
+- [cupertino_icons](https://pub.dev/packages/cupertino_icons)
+- [google_fonts](https://pub.dev/packages/google_fonts) 
+- [animated_splash_screen](https://pub.dev/packages/animated_splash_screen) 
+- [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons) 
+- [lottie](https://pub.dev/packages/lottie) 
+- [carousel_slider](https://pub.dev/packages/carousel_slider) 
+- [cached_network_image](https://pub.dev/packages/cached_network_image) 
+- [shared_preferences](https://pub.dev/packages/shared_preferences)
+- [video_player](https://pub.dev/packages/video_player) 
+- [http](https://pub.dev/packages/http) 
+- [provider](https://pub.dev/packages/provider) 
+- [build_runner](https://pub.dev/packages/build_runner)
+- [flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
+- [flick_video_player](https://pub.dev/packages/flick_video_player) 
+- [flutter_html](https://pub.dev/packages/flutter_html) 
+- [url_launcher](https://pub.dev/packages/url_launcher) 
 
 
 
 ## Acknowledgements
+- Backend: RESTful API with Java Spring Boot
+- Access this source code: [WatchEz API](https://github.com/thuanyg/WatchEz_RESTfulAPI)
 
