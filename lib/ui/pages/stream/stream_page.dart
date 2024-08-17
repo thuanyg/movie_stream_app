@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,7 @@ import 'package:movie_stream/providers/user/favorite_provider.dart';
 import 'package:movie_stream/providers/user/user_provider.dart';
 import 'package:movie_stream/utils/app_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../detail/detail_page.dart';
@@ -117,7 +120,7 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
                                     buttonName: "Hủy yêu thích",
                                     icon: Icons.favorite_outlined,
                                     onSave: () async {
-                                      handleSaveMovie(movie);
+                                      handleUnSaveMovie(movie);
                                     },
                                   );
                                 } else {
@@ -137,9 +140,17 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
                               onSave: () {},
                             ),
                             FunctionButton(
-                              buttonName: "Thông tin",
-                              icon: Icons.info_outlined,
-                              onSave: () {},
+                              buttonName: "Website",
+                              icon: Icons.open_in_browser,
+                              onSave: () async {
+                                final Uri url = Uri.parse(movie!
+                                    .episodes[0]
+                                    .serverData[movieProvider.getCurrentEpisode]
+                                    .linkEmbed);
+                                if (!await launchUrl(url)) {
+                                  throw Exception('Could not launch $url');
+                                }
+                              },
                             ),
                           ],
                         ),
@@ -313,7 +324,7 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
                             .map((item) => item.name)
                             .join(", "),
                       ),
-                      const SizedBox(height: 400),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -354,6 +365,26 @@ class _MovieStreamPageState extends State<MovieStreamPage> {
       AppUtil.showSnackBar(context, "Đã xảy ra lỗi. Vui lòng thử lại!");
     }
   }
+
+  Future<void> handleUnSaveMovie(MovieDetail? movie) async {
+    AppUtil.showLoadingDialog(context, "Đang xử lý...");
+
+    late int? id;
+    for (var fav in favoriteProvider.getListFavoriteMovie) {
+      if (fav.slug == movie?.movie.slug) {
+        id = fav.favoriteMovieId;
+      }
+    }
+
+    bool isUnSaved = await favoriteProvider.deleteFavoriteMovies(id!);
+    AppUtil.hideLoadingDialog(context);
+
+    if (isUnSaved) {
+      AppUtil.showSnackBar(context, "Đã xóa khỏi danh sách yêu thích.");
+    } else {
+      AppUtil.showSnackBar(context, "Đã xảy ra lỗi. Vui lòng thử lại!");
+    }
+  }
 }
 
 class FunctionButton extends StatelessWidget {
@@ -371,6 +402,7 @@ class FunctionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      borderRadius: BorderRadius.circular(50),
       onTap: onSave,
       child: Column(
         children: [
@@ -410,8 +442,8 @@ class MainInfoMovie extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
                 height: 22,
-                width: 29,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(color: Colors.grey),

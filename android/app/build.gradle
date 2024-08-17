@@ -9,10 +9,16 @@ android {
     namespace = "com.example.movie_stream"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+    compileSdkVersion = 34
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8" // Hoặc "1.8" nếu bạn chọn phiên bản Java 1.8
     }
 
     defaultConfig {

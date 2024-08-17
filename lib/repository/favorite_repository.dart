@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:movie_stream/configs/constants.dart';
 import 'package:movie_stream/dto/request/favorite_request.dart';
@@ -72,6 +73,34 @@ class FavoriteRepository {
       }
 
       return null;
+    } on Exception catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<ApiResponse<String>?> deleteFavoriteMovie(int favID) async {
+    String? token = await AppUtil.readSecureStorage(USER_TOKEN_KEY);
+    try {
+      final response = await http.delete(
+        Uri.parse('$URL/$favID'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw TimeoutException('Connection timed out');
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        ApiResponse<String>? apiResponse = ApiResponse.fromJson(data, (json) => json ?? "");
+        return apiResponse;
+      } else {
+        return null;
+      }
     } on Exception catch (e) {
       throw Exception(e);
     }
