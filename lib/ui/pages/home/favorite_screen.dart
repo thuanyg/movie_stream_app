@@ -6,6 +6,7 @@ import 'package:movie_stream/providers/user/favorite_provider.dart';
 import 'package:movie_stream/ui/pages/detail/detail_page.dart';
 import 'package:movie_stream/ui/widgets/progress_indicator.dart';
 import 'package:movie_stream/ui/widgets/thumbnail_image.dart';
+import 'package:movie_stream/utils/app_utils.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -79,12 +80,86 @@ class _FavoriteScreenState extends State<FavoriteScreen>
                                   ),
                                   Text(
                                     "${listFavorite[index].quality!} | ${listFavorite[index].language!}",
-                                    style: AppStyles.heading4,
+                                    style: AppStyles.heading5,
                                   ),
                                   Text(
                                     listFavorite[index].genres!,
-                                    style: AppStyles.heading4,
+                                    style: AppStyles.heading5,
                                   ),
+                                  Text(
+                                    "Đã lưu 3 ngày trước",
+                                    style: AppStyles.heading5.copyWith(
+                                        color: AppColors.primaryColor),
+                                  ),
+                                  Center(
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            height: 38,
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                  DetailPage.routeName,
+                                                  arguments: "",
+                                                );
+                                              },
+                                              style: const ButtonStyle(
+                                                elevation:
+                                                    WidgetStatePropertyAll(4),
+                                                backgroundColor:
+                                                    WidgetStatePropertyAll(
+                                                        Colors.green),
+                                              ),
+                                              child: Text(
+                                                "Xem ngay",
+                                                style: AppStyles.heading4
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 38,
+                                          margin: const EdgeInsets.only(
+                                              top: 10, left: 8),
+                                          child: ElevatedButton(
+                                            onPressed: () async {
+                                              AppUtil.showLoadingDialog(
+                                                context,
+                                                "Đang xóa...",
+                                              );
+                                              await favoriteProvider
+                                                  .deleteFavoriteMovies(
+                                                      listFavorite[index]
+                                                          .favoriteMovieId!);
+                                              AppUtil.hideLoadingDialog(
+                                                  context);
+                                            },
+                                            style: ButtonStyle(
+                                              elevation:
+                                                  const WidgetStatePropertyAll(
+                                                      4),
+                                              backgroundColor:
+                                                  WidgetStatePropertyAll(
+                                                      Colors.red.shade500),
+                                            ),
+                                            child: Text(
+                                              "Xóa",
+                                              style: AppStyles.heading4
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             )
@@ -105,6 +180,5 @@ class _FavoriteScreenState extends State<FavoriteScreen>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

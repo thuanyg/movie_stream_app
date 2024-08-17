@@ -57,11 +57,6 @@ class _HomeScreenState extends State<PersonalScreen> {
                       onTapItemSetting: () => {print("ss")},
                     ),
                     ItemSetting(
-                      iconAssetPath: "assets/images/ic_set_pin.png",
-                      settingName: "Set up Payment PIN",
-                      onTapItemSetting: () => {print("ss")},
-                    ),
-                    ItemSetting(
                       iconAssetPath: "assets/images/ic_delete_account.png",
                       settingName: "Deactivate Account",
                       onTapItemSetting: () => {print("ss")},
@@ -74,22 +69,22 @@ class _HomeScreenState extends State<PersonalScreen> {
                 thickness: .5,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
                     const CategorySetting("App Settings"),
                     ItemSetting(
-                      iconAssetPath: "assets/images/ic_personal_setting.png",
+                      iconAssetPath: "assets/images/ic_theme_setting.png",
                       settingName: "Theme",
                       onTapItemSetting: () => {print("ss")},
                     ),
                     ItemSetting(
-                      iconAssetPath: "assets/images/ic_set_pin.png",
+                      iconAssetPath: "assets/images/ic_notification_setting.png",
                       settingName: "Notification",
                       onTapItemSetting: () => {print("ss")},
                     ),
                     ItemSetting(
-                      iconAssetPath: "assets/images/ic_delete_account.png",
+                      iconAssetPath: "assets/images/ic_history_setting.png",
                       settingName: "History",
                       onTapItemSetting: () => {print("ss")},
                     ),
@@ -106,7 +101,7 @@ class _HomeScreenState extends State<PersonalScreen> {
                   children: [
                     const CategorySetting("Privacy & Policy"),
                     ItemSetting(
-                      iconAssetPath: "assets/images/ic_personal_setting.png",
+                      iconAssetPath: "assets/images/ic_about_setting.png",
                       settingName: "About us",
                       onTapItemSetting: () => {print("ss")},
                     ),

@@ -10,15 +10,14 @@ class CustomTextField extends StatelessWidget {
   final bool passwordType;
   final FormFieldValidator<String>? validator;
 
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    required this.label,
-    required this.prefixIcon,
-    this.textInputType = TextInputType.text,
-    this.passwordType = false,
-    this.validator
-  });
+  const CustomTextField(
+      {super.key,
+      required this.controller,
+      required this.label,
+      required this.prefixIcon,
+      this.textInputType = TextInputType.text,
+      this.passwordType = false,
+      this.validator});
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +34,15 @@ class CustomTextField extends StatelessWidget {
           borderSide: const BorderSide(color: Colors.white),
           borderRadius: BorderRadius.circular(12),
         ),
-        prefixIcon: Icon(prefixIcon, color: Colors.white30,),
+        prefixIcon: Icon(
+          prefixIcon,
+          color: Colors.white30,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: Colors.orange, width: 0.1),
         ),
       ),
-
       validator: validator,
     );
   }

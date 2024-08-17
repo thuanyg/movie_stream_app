@@ -31,12 +31,23 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
-          create: (_) => LoginProvider(AuthRepository(), VerifyRepository())),
-      ChangeNotifierProvider(create: (_) => SignupProvider(UserRepository())),
-      ChangeNotifierProvider(create: (_) => UserProvider(UserRepository())),
-      ChangeNotifierProvider(create: (_) => MovieProvider(MovieRepository())),
+        create: (_) => LoginProvider(
+          AuthRepository(),
+          VerifyRepository(),
+        ),
+      ),
       ChangeNotifierProvider(
-          create: (_) => FavoriteProvider(FavoriteRepository())),
+        create: (_) => SignupProvider(UserRepository()),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => UserProvider(UserRepository()),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => MovieProvider(MovieRepository()),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => FavoriteProvider(FavoriteRepository()),
+      ),
     ],
     child: const MyApp(),
   ));

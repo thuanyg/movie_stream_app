@@ -21,7 +21,7 @@ const List<Onboarding> onboardingPages = [
 
 // API
 const String APP_BASE_URL = "https://watchez.onrender.com/watchez";
-const String MOVIE_API_URL = ""; // hidden API. Contact to email thuanht.nuce@gmail.com to obtain it.
+const String MOVIE_API_URL = "https://phimapi.com"; // hidden API. Contact to email thuanht.nuce@gmail.com to obtain it.
 
 const int LIMIT_INITIAL = 18;
 const int LIMIT_SEARCH_RESULT = 20;
@@ -48,10 +48,6 @@ const Map<String, String> categories = {
   TAM_LY: "Tâm lý",
   VIEN_TUONG: "Viễn tưởng"
 };
-
-
-
-
 
 // DataStorage
 const String USER_TOKEN_KEY = "userToken";
