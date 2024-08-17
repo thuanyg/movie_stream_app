@@ -1,6 +1,6 @@
 
 # WatchEz - Movie Stream App
-Movie app made in Flutter with clean architecture using Provider, Hive and the movie db API.
+Movie app made in Flutter with clean architecture using Provider and the movie db API.
 
 ## Features
 - Sign in/Sign up (Authentication)
@@ -41,9 +41,9 @@ cd movie_stream_app
 ```bash
 flutter pub get
 ```
-### 3. Add your API key into api_constants file
+### 3. Add link API into app_constants file
 ```bash
-apiKey = 'YOUR_API_KEY';
+MOVIE_API_URL = 'API_LINK';
 ```
 ### 4. Run the app
 ```bash 
